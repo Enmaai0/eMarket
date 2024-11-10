@@ -6,5 +6,5 @@ import com.emarket.market.vo.ResponseVo;
 import jakarta.validation.Valid;
 
 public interface UserService {
-    ResponseVo register(@Valid User user);
+    ResponseVo<User> register(User user);
 }

@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public ResponseVo register(@Valid User user) {
+    public ResponseVo<User> register(User user) {
         int countByUsername = userMapper.countByUsername(user.getUsername());
         if(countByUsername > 0){
             return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
