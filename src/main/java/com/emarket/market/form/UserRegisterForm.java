@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UserForm {
+public class UserRegisterForm {
     @NotBlank(message = "Username cannot be empty")
     private String username;
 
@@ -14,7 +14,7 @@ public class UserForm {
     @NotBlank(message = "Email cannot be empty")
     private String email;
 
-    public UserForm(String username, String password, String email) {
+    public UserRegisterForm(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;

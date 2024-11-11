@@ -11,18 +11,23 @@ public class ResponseVo<T> {
     private String msg;
     private T data;
 
-    public ResponseVo(Integer status, String msg, T data) {
+    private ResponseVo(Integer status, String msg, T data) {
         this.status = status;
         this.msg = msg;
+        this.data = data;
     }
 
-    public ResponseVo(Integer status, String msg) {
+    private ResponseVo(Integer status, String msg) {
         this.status = status;
         this.msg = msg;
     }
 
     public static <T> ResponseVo<T> sucess() {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc());
+    }
+
+    public static <T> ResponseVo<T> sucess(T data) {
+        return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc(), data);
     }
 
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum) {
