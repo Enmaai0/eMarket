@@ -23,9 +23,10 @@ import java.util.Objects;
 public class UserController {
     @Autowired
     private UserService userService;
+
     @PostMapping("/user/register")
-    public ResponseVo<User> register(@Valid @RequestBody UserRegisterForm userRegisterForm, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
+    public ResponseVo<User> register(@Valid @RequestBody UserRegisterForm userRegisterForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             log.error("Registration error: {}", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
             return ResponseVo.error(ResponseEnum.PARAM_ERROR,
                     Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -36,8 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseVo<User> login(@RequestBody UserLoginForm userLoginForm, BindingResult bindingResult, HttpServletRequest request){
-        if(bindingResult.hasErrors()) {
+    public ResponseVo<User> login(@RequestBody UserLoginForm userLoginForm, BindingResult bindingResult, HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
             log.error("Login error: {}", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
             return ResponseVo.error(ResponseEnum.PARAM_ERROR,
                     Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
@@ -49,12 +50,16 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseVo<User> userInfo(HttpSession session){
+    public ResponseVo<User> userInfo(HttpSession session) {
         log.info("/user sessionId={}", session.getId());
         User user = (User) session.getAttribute(EmarketConst.CURRENT_USER);
-        if(user == null) {
-            return ResponseVo.error(ResponseEnum.NEED_LOGIN);
-        }
         return ResponseVo.sucess(user);
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseVo<User> logout(HttpSession session) {
+        log.info("/user/logout sessionId={}", session.getId());
+        session.removeAttribute(EmarketConst.CURRENT_USER);
+        return ResponseVo.sucess();
     }
 }
