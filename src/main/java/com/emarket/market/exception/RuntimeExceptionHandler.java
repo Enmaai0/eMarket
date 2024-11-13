@@ -14,4 +14,10 @@ public class RuntimeExceptionHandler {
     public ResponseVo handle(RuntimeException e){
         return ResponseVo.error(ResponseEnum.ERROR, e.getMessage());
     }
+
+    @ExceptionHandler(UserNotLoginException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseVo userNotLogin(UserNotLoginException e){
+        return ResponseVo.error(ResponseEnum.NEED_LOGIN);
+    }
 }
