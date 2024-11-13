@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseVo<User> login(@RequestBody UserLoginForm userLoginForm, BindingResult bindingResult, HttpServletRequest request) {
+    public ResponseVo<User> login(@Valid @RequestBody UserLoginForm userLoginForm, BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             log.error("Login error: {}", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
             return ResponseVo.error(ResponseEnum.PARAM_ERROR,
