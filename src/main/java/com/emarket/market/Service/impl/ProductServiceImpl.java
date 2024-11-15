@@ -3,6 +3,7 @@ package com.emarket.market.Service.impl;
 import com.emarket.market.Service.CategoryService;
 import com.emarket.market.Service.ProductService;
 import com.emarket.market.dao.ProductMapper;
+import com.emarket.market.enums.ResponseEnum;
 import com.emarket.market.pojo.Product;
 import com.emarket.market.vo.ProductDetailVo;
 import com.emarket.market.vo.ProductVo;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.emarket.market.enums.ProductStatusEnum.DELETE;
 import static com.emarket.market.enums.ProductStatusEnum.OFF_SALE;
 
 @Slf4j
@@ -45,5 +47,16 @@ public class ProductServiceImpl implements ProductService {
         }
         PageInfo<ProductVo> pageInfo = new PageInfo<>(productVoList);
         return ResponseVo.success(pageInfo);
+    }
+
+    @Override
+    public ResponseVo<ProductDetailVo> detail(Integer productId) {
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if(product.getStatus().equals(OFF_SALE.getCode()) || product.getStatus().equals(DELETE.getCode())) {
+            return ResponseVo.error(ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE);
+        }
+        ProductDetailVo productDetailVo = new ProductDetailVo();
+        BeanUtils.copyProperties(product, productDetailVo);
+        return ResponseVo.success(productDetailVo);
     }
 }
