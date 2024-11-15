@@ -16,7 +16,8 @@ public class IntercepterConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/user/login",
                         "/user/register",
-                        "/categories"
+                        "/categories",
+                        "/products"
                 );
     }
 }

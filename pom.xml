@@ -85,6 +85,13 @@
                     <overwrite>true</overwrite>
                     <verbose>false</verbose>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>8.3.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

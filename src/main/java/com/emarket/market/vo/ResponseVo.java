@@ -22,11 +22,11 @@ public class ResponseVo<T> {
         this.msg = msg;
     }
 
-    public static <T> ResponseVo<T> sucess() {
+    public static <T> ResponseVo<T> success() {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc());
     }
 
-    public static <T> ResponseVo<T> sucess(T data) {
+    public static <T> ResponseVo<T> success(T data) {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc(), data);
     }
 

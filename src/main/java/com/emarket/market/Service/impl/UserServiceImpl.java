@@ -6,12 +6,9 @@ import com.emarket.market.enums.ResponseEnum;
 import com.emarket.market.enums.RoleEnum;
 import com.emarket.market.pojo.User;
 import com.emarket.market.vo.ResponseVo;
-import jakarta.validation.Valid;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.charset.StandardCharsets;
 
@@ -40,7 +37,7 @@ public class UserServiceImpl implements UserService {
         if(count != 1){
             return ResponseVo.error(ResponseEnum.ERROR);
         }
-        return ResponseVo.sucess();
+        return ResponseVo.success();
     }
 
     @Override
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService {
             return ResponseVo.error(ResponseEnum.USERNAME_OR_PASSWORD_ERROR);
         }
         user.setPassword("");
-        return ResponseVo.sucess(user);
+        return ResponseVo.success(user);
     }
 
 }
