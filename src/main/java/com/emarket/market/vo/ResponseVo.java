@@ -13,7 +13,6 @@ public class ResponseVo<T> {
 
     private ResponseVo(Integer status, String msg, T data) {
         this.status = status;
-        this.msg = msg;
         this.data = data;
     }
 
