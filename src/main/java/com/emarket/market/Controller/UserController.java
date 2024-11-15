@@ -53,13 +53,13 @@ public class UserController {
     public ResponseVo<User> userInfo(HttpSession session) {
         log.info("/user sessionId={}", session.getId());
         User user = (User) session.getAttribute(EmarketConst.CURRENT_USER);
-        return ResponseVo.sucess(user);
+        return ResponseVo.success(user);
     }
 
     @PostMapping("/user/logout")
     public ResponseVo<User> logout(HttpSession session) {
         log.info("/user/logout sessionId={}", session.getId());
         session.removeAttribute(EmarketConst.CURRENT_USER);
-        return ResponseVo.sucess();
+        return ResponseVo.success();
     }
 }
