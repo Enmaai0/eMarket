@@ -25,24 +25,14 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/user/register")
-    public ResponseVo<User> register(@Valid @RequestBody UserRegisterForm userRegisterForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.error("Registration error: {}", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-            return ResponseVo.error(ResponseEnum.PARAM_ERROR,
-                    Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseVo<User> register(@Valid @RequestBody UserRegisterForm userRegisterForm) {
         User user = new User();
         BeanUtils.copyProperties(userRegisterForm, user);
         return userService.register(user);
     }
 
     @PostMapping("/user/login")
-    public ResponseVo<User> login(@Valid @RequestBody UserLoginForm userLoginForm, BindingResult bindingResult, HttpServletRequest request) {
-        if (bindingResult.hasErrors()) {
-            log.error("Login error: {}", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-            return ResponseVo.error(ResponseEnum.PARAM_ERROR,
-                    Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
+    public ResponseVo<User> login(@Valid @RequestBody UserLoginForm userLoginForm, HttpServletRequest request) {
         ResponseVo<User> responseVo = userService.login(userLoginForm.getUsername(), userLoginForm.getPassword());
         HttpSession session = request.getSession();
         session.setAttribute(EmarketConst.CURRENT_USER, responseVo.getData());
