@@ -34,8 +34,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseVo<PageInfo> productList(Integer categoryId, Integer pageNum, Integer pageSize) {
         Set<Integer> categoryIdSet = new HashSet<>();
-        categoryService.findSubCategoryId(categoryId, categoryIdSet);
-        categoryIdSet.add(categoryId);
+        if(categoryId != null) {
+            categoryService.findSubCategoryId(categoryId, categoryIdSet);
+            categoryIdSet.add(categoryId);
+        }
+
         PageHelper.startPage(pageNum, pageSize);
         List<Product> products = productMapper.selectByCategoryIdSet(categoryIdSet);
 

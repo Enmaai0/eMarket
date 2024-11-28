@@ -45,12 +45,21 @@
     <include refid="Base_Column_List" />
     from emarket_product
     where status = 1
-    <if test="categoryIdSet.size() == 0">
+    <if test="categoryIdSet.size() > 0">
       and category_id in
       <foreach collection="categoryIdSet" item="categoryId" open="(" close=")" separator=",">
         #{categoryId}
       </foreach>
     </if>
+  </select>
+  <select id="selectByProductIdSet" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from emarket_product
+    where id in
+      <foreach collection="productIdSet" item="productId" open="(" close=")" separator=",">
+        #{productId}
+      </foreach>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
