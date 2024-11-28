@@ -18,7 +18,9 @@ public class IntercepterConfig implements WebMvcConfigurer {
                         "/user/register",
                         "/categories",
                         "/products",
-                        "/products/*"
+                        "/products/*",
+                        "/carts",
+                        "/error"
                 );
     }
 }
