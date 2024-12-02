@@ -36,6 +36,7 @@ public class CartProductVo {
         this.productMainImage = productMainImage;
         this.productPrice = productPrice;
         this.productStatus = productStatus;
+        this.productTotalPrice = productTotalPrice;
         this.productStock = productStock;
         this.productSelected = productSelected;
     }

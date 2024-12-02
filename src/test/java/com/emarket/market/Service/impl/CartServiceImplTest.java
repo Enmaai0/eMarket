@@ -3,6 +3,7 @@ package com.emarket.market.Service.impl;
 import ch.qos.logback.classic.spi.EventArgUtil;
 import com.emarket.market.EmarketApplicationTests;
 import com.emarket.market.form.CartAddForm;
+import com.emarket.market.form.CartUpdateForm;
 import com.emarket.market.vo.CartVo;
 import com.emarket.market.vo.ResponseVo;
 import com.google.gson.Gson;
@@ -29,7 +30,22 @@ class CartServiceImplTest extends EmarketApplicationTests {
 
     @Test
     void listCart() {
-        ResponseVo<CartVo> cartVoResponseVo = cartServiceimpl.listCart(1);
-        log.info("listCart = {}", gson.toJson(cartVoResponseVo));
+        ResponseVo<CartVo> responseVo = cartServiceimpl.listCart(1);
+        log.info("listCart = {}", gson.toJson(responseVo));
+    }
+
+    @Test
+    void update() {
+        CartUpdateForm cartUpdateForm = new CartUpdateForm();
+        cartUpdateForm.setQuantity(1);
+        cartUpdateForm.setSelected(true);
+        ResponseVo<CartVo> responseVo = cartServiceimpl.update(1, 28, cartUpdateForm);
+        log.info("update = {}", gson.toJson(responseVo));
+    }
+
+    @Test
+    void delete() {
+        ResponseVo<CartVo> responseVo = cartServiceimpl.delete(1, 28);
+        log.info("delete = {}", gson.toJson(responseVo));
     }
 }
