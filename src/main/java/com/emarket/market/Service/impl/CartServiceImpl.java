@@ -31,17 +31,18 @@ public class CartServiceImpl implements CarService {
     private ProductMapper productMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public ResponseVo<CartVo> add(Integer uid, CartAddForm cartAddForm) {
         Product product = productMapper.selectByPrimaryKey(cartAddForm.getProductId());
         if (product == null) {
             return ResponseVo.error(ResponseEnum.PRODUCT_NOT_EXIST);
         }
-        if(product.getStatus().equals(ProductStatusEnum.OFF_SALE.getCode())
-            || product.getStatus().equals(ProductStatusEnum.DELETE.getCode())) {
+        if (product.getStatus().equals(ProductStatusEnum.OFF_SALE.getCode())
+                || product.getStatus().equals(ProductStatusEnum.DELETE.getCode())) {
             return ResponseVo.error(ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE);
         }
-        if(product.getStock() <= 0) {
+        if (product.getStock() <= 0) {
             return ResponseVo.error(ResponseEnum.PRODUCT_STOCK_ERROR);
         }
 
@@ -49,7 +50,7 @@ public class CartServiceImpl implements CarService {
         String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
         String value = opsForHash.get(redisKey, String.valueOf(product.getId()));
         Cart cart;
-        if(value == null) {
+        if (value == null) {
             cart = new Cart(product.getId(), 1, cartAddForm.getSelected());
         } else {
             cart = new Gson().fromJson(value, Cart.class);
@@ -80,11 +81,11 @@ public class CartServiceImpl implements CarService {
         Boolean selectAll = true;
         Integer cartTotalQuantity = 0;
         BigDecimal cartTotalPrice = BigDecimal.ZERO;
-        for(Map.Entry<String, String> entry : entries.entrySet()) {
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
             Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
             Integer productId = Integer.valueOf(entry.getKey());
 
-            if(productMap.get(productId) != null) {
+            if (productMap.get(productId) != null) {
                 Product product = productMap.get(productId);
                 CartProductVo cartProductVo = new CartProductVo(productId,
                         cart.getQuantity(),
@@ -98,10 +99,10 @@ public class CartServiceImpl implements CarService {
                         cart.getProductSelected());
                 cartProductVos.add(cartProductVo);
 
-                if(!cart.getProductSelected()) {
+                if (!cart.getProductSelected()) {
                     selectAll = false;
                 }
-                if(cart.getProductSelected()) {
+                if (cart.getProductSelected()) {
                     cartTotalPrice = cartTotalPrice.add(cartProductVo.getProductTotalPrice());
                 }
             }
@@ -120,15 +121,15 @@ public class CartServiceImpl implements CarService {
         String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
         String value = opsForHash.get(redisKey, String.valueOf(productId));
         Cart cart;
-        if(value == null) {
+        if (value == null) {
             return ResponseVo.error(ResponseEnum.PRODUCT_NOT_EXIST);
         }
         cart = new Gson().fromJson(value, Cart.class);
-        if(cartUpdateForm.getQuantity() != null
+        if (cartUpdateForm.getQuantity() != null
                 && cartUpdateForm.getQuantity() >= 0) {
             cart.setQuantity(cartUpdateForm.getQuantity());
         }
-        if(cartUpdateForm.getSelected() != null) {
+        if (cartUpdateForm.getSelected() != null) {
             cart.setProductSelected(cartUpdateForm.getSelected());
         }
         opsForHash.put(redisKey, String.valueOf(productId), new Gson().toJson(cart));
@@ -140,10 +141,53 @@ public class CartServiceImpl implements CarService {
         HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
         String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
         String value = opsForHash.get(redisKey, String.valueOf(productId));
-        if(value == null) {
+        if (value == null) {
             return ResponseVo.error(ResponseEnum.CART_PRODUCT_NOT_EXIST);
         }
         opsForHash.delete(redisKey, String.valueOf(productId));
         return listCart(uid);
+    }
+
+    @Override
+    public ResponseVo<CartVo> selectAll(Integer uid) {
+        HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
+        Map<String, String> entries = opsForHash.entries(redisKey);
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
+            cart.setProductSelected(true);
+            opsForHash.put(redisKey,
+                    String.valueOf(cart.getProductId()),
+                    new Gson().toJson(cart));
+        }
+        return listCart(uid);
+    }
+
+    @Override
+    public ResponseVo<CartVo> unSelectAll(Integer uid) {
+        HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
+        Map<String, String> entries = opsForHash.entries(redisKey);
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
+            cart.setProductSelected(false);
+            opsForHash.put(redisKey,
+                    String.valueOf(cart.getProductId()),
+                    new Gson().toJson(cart));
+        }
+        return listCart(uid);
+    }
+
+    @Override
+    public ResponseVo<Integer> sum(Integer uid) {
+        HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
+        Map<String, String> entries = opsForHash.entries(redisKey);
+        int sum = 0;
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
+            sum += cart.getQuantity();
+        }
+        return ResponseVo.success(sum);
     }
 }
