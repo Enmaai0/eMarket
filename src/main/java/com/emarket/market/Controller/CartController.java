@@ -2,11 +2,13 @@ package com.emarket.market.Controller;
 
 import com.emarket.market.Service.impl.CartServiceImpl;
 import com.emarket.market.form.CartAddForm;
+import com.emarket.market.form.CartUpdateForm;
 import com.emarket.market.vo.CartVo;
 import com.emarket.market.vo.ResponseVo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,5 +19,10 @@ public class CartController {
     @PostMapping("/carts")
     public ResponseVo<CartVo> add(@Valid @RequestBody CartAddForm cartAddForm) {
         return cartServiceimpl.add(1 ,cartAddForm);
+    }
+
+    @PutMapping("/carts")
+    public ResponseVo<CartVo> update(@Valid @RequestBody CartUpdateForm cartUpdateForm, Integer productId) {
+        return cartServiceimpl.update(1, productId, cartUpdateForm);
     }
 }
