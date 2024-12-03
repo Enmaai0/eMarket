@@ -1,14 +1,9 @@
-package com.emarket.market.pojo;
+package com.emarket.market.form;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class Shipping {
-    private Integer id;
-
-    private Integer userId;
+public class ShippingForm {
 
     private String receiverName;
 
@@ -25,8 +20,4 @@ public class Shipping {
     private String receiverAddress;
 
     private String receiverZip;
-
-    private Date createTime;
-
-    private Date updateTime;
 }
