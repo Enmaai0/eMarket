@@ -3,6 +3,8 @@ package com.emarket.market.dao;
 import com.emarket.market.pojo.Shipping;
 import io.lettuce.core.dynamic.annotation.Param;
 
+import java.util.List;
+
 public interface ShippingMapper {
 
     int deleteByPrimaryKey(Integer id);
@@ -18,4 +20,6 @@ public interface ShippingMapper {
     int updateByPrimaryKey(Shipping row);
 
     int deleteByIdAndUid(@Param("shippingId") Integer shippingId, @Param("uid") Integer uid);
+
+    List<Shipping> selectByUid(Integer uid);
 }
