@@ -25,6 +25,10 @@ public class ResponseVo<T> {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc());
     }
 
+    public static <T> ResponseVo<T> success(String msg) {
+        return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), msg);
+    }
+
     public static <T> ResponseVo<T> success(T data) {
         return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc(), data);
     }
