@@ -9,6 +9,7 @@ import com.emarket.market.vo.ResponseVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -34,12 +35,24 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public ResponseVo delete(Integer uid, Integer shippingId) {
-        return null;
+        int count = shippingMapper.deleteByIdAndUid(shippingId, uid);
+        if(count == 0) {
+            return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
+        }
+        return ResponseVo.success("Delete shipping address successfully");
     }
 
     @Override
     public ResponseVo update(Integer uid, Integer shippingId, ShippingForm shippingForm) {
-        return null;
+        Shipping shipping = new Shipping();
+        shipping.setId(shippingId);
+        shipping.setUserId(uid);
+        BeanUtils.copyProperties(shippingForm, shipping);
+        int count = shippingMapper.updateByPrimaryKeySelective(shipping);
+        if(count == 0) {
+            return ResponseVo.error(ResponseEnum.ERROR);
+        }
+        return ResponseVo.success();
     }
 
     @Override

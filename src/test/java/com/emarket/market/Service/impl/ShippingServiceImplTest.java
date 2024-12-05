@@ -36,4 +36,27 @@ class ShippingServiceImplTest extends EmarketApplicationTests {
         log.info("add = {}", new Gson().toJson(responseVo));
         assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
+
+    @Test
+    void delete() {
+        ResponseVo responseVo = shippingServiceimpl.delete(1, 7);
+        log.info("delete = {}", new Gson().toJson(responseVo));
+        assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
+    }
+
+    @Test
+    void update() {
+        ShippingForm shippingForm = new ShippingForm();
+        shippingForm.setReceiverAddress("notchanged");
+        shippingForm.setReceiverCity("changed");
+        shippingForm.setReceiverDistrict("changed");
+        shippingForm.setReceiverMobile("54321");
+        shippingForm.setReceiverName("changed");
+        shippingForm.setReceiverPhone("123");
+        shippingForm.setReceiverProvince("test");
+        shippingForm.setReceiverZip("test");
+        ResponseVo responseVo = shippingServiceimpl.update(1, 6, shippingForm);
+        log.info("update = {}", new Gson().toJson(responseVo));
+        assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
+    }
 }
