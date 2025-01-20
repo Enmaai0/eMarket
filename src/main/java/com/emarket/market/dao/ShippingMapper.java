@@ -22,4 +22,6 @@ public interface ShippingMapper {
     int deleteByIdAndUid(@Param("shippingId") Integer shippingId, @Param("uid") Integer uid);
 
     List<Shipping> selectByUid(Integer uid);
+
+    Shipping selectByUidAndShippingId(@Param("uid") Integer uid, @Param("shippingId") Integer shippingId);
 }

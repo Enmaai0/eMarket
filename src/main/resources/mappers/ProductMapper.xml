@@ -56,10 +56,12 @@
     select
     <include refid="Base_Column_List" />
     from emarket_product
-    where id in
-      <foreach collection="productIdSet" item="productId" open="(" close=")" separator=",">
-        #{productId}
-      </foreach>
+    <if test="productIdSet != null and !productIdSet.isEmpty()">
+      where id in
+        <foreach collection="productIdSet" item="productId" open="(" close=")" separator=",">
+          #{productId}
+        </foreach>
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     <!--
