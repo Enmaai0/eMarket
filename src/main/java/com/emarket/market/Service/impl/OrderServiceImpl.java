@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseVo<OrderVo> create(Integer uid, Integer shippingId) {
         Shipping shipping = shippingMapper.selectByUidAndShippingId(uid, shippingId);
+
         if (shipping == null) {
             return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
         }
