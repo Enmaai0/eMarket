@@ -13,6 +13,8 @@ import com.emarket.market.pojo.*;
 import com.emarket.market.vo.OrderItemVo;
 import com.emarket.market.vo.OrderVo;
 import com.emarket.market.vo.ResponseVo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,6 +100,42 @@ public class OrderServiceImpl implements OrderService {
 
         OrderVo orderVo = buildOrderVo(order, orderItemList, shipping);
         return ResponseVo.success(orderVo);
+    }
+
+    @Override
+    public ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderList = orderMapper.selectByUid(uid);
+        
+        Set<Long> orderNoSet = orderList.stream().map(Order::getOrderNo)
+                .collect(Collectors.toSet());
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNoSet(orderNoSet);
+
+        Map<Long, List<OrderItem>> orderItemMap = orderItemList.stream()
+                .collect(Collectors.groupingBy(OrderItem::getOrderNo));
+
+        Set<Integer> shippingIdSet = orderList.stream().map(Order::getShippingId)
+                .collect(Collectors.toSet());
+        List<Shipping> shippingList = shippingMapper.selectByShippingIdSet(shippingIdSet);
+        Map<Integer, Shipping> shippingMap = shippingList.stream()
+                .collect(Collectors.toMap(Shipping::getId, s -> s));
+
+        List<OrderVo> orderVoList = new ArrayList<>();
+        for(Order order : orderList) {
+            OrderVo orderVo = buildOrderVo(order,
+                    orderItemMap.get(order.getOrderNo()),
+                    shippingMap.get(order.getShippingId()));
+            orderVoList.add(orderVo);
+        }
+
+        PageInfo pageInfo = new PageInfo<>(orderList);
+        pageInfo.setList(orderVoList);
+        return ResponseVo.success(pageInfo);
+    }
+
+    @Override
+    public ResponseVo<OrderVo> detail(Integer uid, Long orderNo) {
+        return null;
     }
 
     private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList, Shipping shipping) {

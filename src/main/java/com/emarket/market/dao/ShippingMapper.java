@@ -4,6 +4,7 @@ import com.emarket.market.pojo.Shipping;
 import io.lettuce.core.dynamic.annotation.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ShippingMapper {
 
@@ -24,4 +25,6 @@ public interface ShippingMapper {
     List<Shipping> selectByUid(Integer uid);
 
     Shipping selectByUidAndShippingId(@Param("uid") Integer uid, @Param("shippingId") Integer shippingId);
+
+    List<Shipping> selectByShippingIdSet(@Param("shippingIdSet") Set shippingIdSet);
 }

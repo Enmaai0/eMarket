@@ -2,6 +2,8 @@ package com.emarket.market.dao;
 
 import com.emarket.market.pojo.Order;
 
+import java.util.List;
+
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -15,5 +17,5 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order row);
 
-
+    List<Order> selectByUid(Integer uid);
 }
