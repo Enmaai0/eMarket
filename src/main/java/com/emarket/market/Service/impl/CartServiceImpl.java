@@ -150,10 +150,11 @@ public class CartServiceImpl implements CarService {
 
     @Override
     public ResponseVo<CartVo> selectAll(Integer uid) {
-        List<Cart> cartList = listAll(uid);
         HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
         String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
-        for (Cart cart : cartList) {
+        Map<String, String> entries = opsForHash.entries(redisKey);
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
             cart.setProductSelected(true);
             opsForHash.put(redisKey,
                     String.valueOf(cart.getProductId()),
@@ -164,10 +165,11 @@ public class CartServiceImpl implements CarService {
 
     @Override
     public ResponseVo<CartVo> unSelectAll(Integer uid) {
-        List<Cart> cartList = listAll(uid);
         HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
         String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
-        for (Cart cart : cartList) {
+        Map<String, String> entries = opsForHash.entries(redisKey);
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
             cart.setProductSelected(false);
             opsForHash.put(redisKey,
                     String.valueOf(cart.getProductId()),
@@ -178,23 +180,14 @@ public class CartServiceImpl implements CarService {
 
     @Override
     public ResponseVo<Integer> sum(Integer uid) {
-        List<Cart> cartList = listAll(uid);
+        HashOperations<String, String, String> opsForHash = stringRedisTemplate.opsForHash();
+        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
+        Map<String, String> entries = opsForHash.entries(redisKey);
         int sum = 0;
-        for (Cart cart : cartList) {
+        for (Map.Entry<String, String> entry : entries.entrySet()) {
+            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
             sum += cart.getQuantity();
         }
         return ResponseVo.success(sum);
-    }
-
-    public List<Cart> listAll(Integer uid) {
-        HashOperations opsForHash = stringRedisTemplate.opsForHash();
-        String redisKey = String.format(CART_REDIS_KEY_TEMPLATE, uid);
-        Map<String, String> entries = opsForHash.entries(redisKey);
-        List<Cart> cartList = new ArrayList<>();
-        for(Map.Entry<String, String> entry : entries.entrySet()) {
-            Cart cart = new Gson().fromJson(entry.getValue(), Cart.class);
-            cartList.add(cart);
-        }
-        return cartList;
     }
 }
