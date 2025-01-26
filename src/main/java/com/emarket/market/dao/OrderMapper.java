@@ -18,4 +18,6 @@ public interface OrderMapper {
     int updateByPrimaryKey(Order row);
 
     List<Order> selectByUid(Integer uid);
+
+    Order selectByOrderNo(Long orderNo);
 }
