@@ -62,4 +62,12 @@ class OrderServiceImplTest extends EmarketApplicationTests {
         log.info("responseVo={}", gson.toJson(responseVo));
         assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
+
+    @Test
+    void cancel() {
+        ResponseVo<OrderVo> vo = createForTest();
+        ResponseVo responseVo = orderService.cancel(uid, vo.getData().getOrderNo());
+        log.info("responseVo={}", gson.toJson(responseVo));
+        assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
+    }
 }
