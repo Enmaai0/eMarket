@@ -12,18 +12,22 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
+@Transactional
 class CartServiceImplTest extends EmarketApplicationTests {
     @Autowired
     private CartServiceImpl cartServiceimpl;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    @Test
+    @BeforeEach
     void add() {
         CartAddForm cartAddForm = new CartAddForm();
         cartAddForm.setProductId(28);
@@ -45,12 +49,12 @@ class CartServiceImplTest extends EmarketApplicationTests {
         CartUpdateForm cartUpdateForm = new CartUpdateForm();
         cartUpdateForm.setQuantity(1);
         cartUpdateForm.setSelected(true);
-        ResponseVo<CartVo> responseVo = cartServiceimpl.update(1, 27, cartUpdateForm);
+        ResponseVo<CartVo> responseVo = cartServiceimpl.update(1, 28, cartUpdateForm);
         log.info("update = {}", gson.toJson(responseVo));
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
 
-    @Test
+    @AfterEach
     void delete() {
         ResponseVo<CartVo> responseVo = cartServiceimpl.delete(1, 28);
         log.info("delete = {}", gson.toJson(responseVo));
