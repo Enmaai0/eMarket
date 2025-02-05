@@ -2,7 +2,6 @@ package com.emarket.market.vo;
 
 import com.emarket.market.pojo.Shipping;
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
