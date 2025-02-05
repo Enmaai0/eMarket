@@ -169,6 +169,23 @@ public class OrderServiceImpl implements OrderService {
         return ResponseVo.success();
     }
 
+    @Override
+    public void paid(Long orderNo) {
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order == null) {
+            throw new RuntimeException("Order not found");
+        }
+        if(!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())) {
+            throw new RuntimeException("Order status error");
+        }
+        order.setStatus(OrderStatusEnum.PAID.getCode());
+        order.setPaymentTime(new Date());
+        int count = orderMapper.updateByPrimaryKeySelective(order);
+        if(count <= 0) {
+            throw new RuntimeException("Update order status error, orderNo:" + orderNo);
+        }
+    }
+
     private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList, Shipping shipping) {
         OrderVo orderVo = new OrderVo();
         BeanUtils.copyProperties(order, orderVo);
